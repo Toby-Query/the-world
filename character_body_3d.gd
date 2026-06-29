@@ -24,6 +24,23 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
-	velocity.y=0
+
+	# Apply buoyancy when in water (water level is 0.0)
+	var water_level := 0.0
+	var depth := water_level - global_position.y
+	if depth > -1.0: # Player is at least partially in water (capsule bottom is at y - 1.0)
+		var submersion := clampf((depth + 1.0) / 2.0, 0.0, 1.0)
+		var buoyancy_force := get_gravity().length() * 1.5 * submersion
+		velocity.y += buoyancy_force * delta
+		
+		# Swim controls: Space to swim up, Shift to swim down
+		var swim_speed := 3.0
+		if Input.is_key_pressed(KEY_SPACE):
+			velocity.y = move_toward(velocity.y, swim_speed, 15.0 * delta)
+		elif Input.is_key_pressed(KEY_SHIFT):
+			velocity.y = move_toward(velocity.y, -swim_speed, 15.0 * delta)
+		else:
+			# Apply water drag to prevent infinite bobbing/oscillations
+			velocity.y = move_toward(velocity.y, 0.0, 4.0 * delta)
 
 	move_and_slide()

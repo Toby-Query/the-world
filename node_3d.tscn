@@ -21,7 +21,7 @@ albedo_color = Color(0.29411766, 1, 1, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4j8xc"]
 material = SubResource("StandardMaterial3D_psklh")
-size = Vector2(10, 10)
+size = Vector2(10000, 10000)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4j8xc"]
 
